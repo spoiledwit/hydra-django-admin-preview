@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Applications</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+    }
+    .container {
+      width: 80%;
+      margin: 70px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .search-container {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+    .file-button {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 14px;
+      color: #fff;
+      background-color: #42a7c3;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+    }
+    .file-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>All Applications</h1>
+    <div class="search-container">
+      <input type="text" id="searchBox" placeholder="Search for applications..." />
+    </div>
+    <table id="applicationsTable">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Country Name</th>
+          <th>Visa Type</th>
+          <th>Status</th>
+          <th>Form Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for app in applications %}
+        <tr>
+          <td>{{ app.user }}</td>
+          <td>{{ app.country_name }}</td>
+          <td>{{ app.visa_type }}</td>
+          <td>{{ app.status }}</td>
+          <td>
+            <div>
+              {% for key, value in app.responses.items %}
+              <p><strong>{{ key }}:</strong> 
+                {% if value|slice:"-4:" == ".pdf" or value|slice:"-4:" == ".jpg" or value|slice:"-4:" == ".png" or value|slice:"-4:" == ".docx" %}
+                  <a href="{{ value }}" target="_blank" class="file-button">View File</a>
+                {% else %}
+                  {{ value }}
+                {% endif %}
+              </p>
+              {% empty %}
+              <p>No responses available.</p>
+              {% endfor %}
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5">No applications available.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    document.getElementById('searchBox').addEventListener('input', function() {
+      var searchTerm = this.value.toLowerCase();
+      var table = document.getElementById('applicationsTable');
+      var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+      Array.from(rows).forEach(row => {
+        var cells = row.getElementsByTagName('td');
+        var match = Array.from(cells).some(cell => cell.textContent.toLowerCase().includes(searchTerm));
+        row.style.display = match ? '' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
