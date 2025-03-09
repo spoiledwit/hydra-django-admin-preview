@@ -6,26 +6,30 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - name: Pull latest code
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set up environment
         run: |
-          cd ~/hydra-django-admin-preview
-          git pull
-          
-      - name: Install dependencies
-        run: |
-          cd ~/hydra-django-admin-preview
+          # Create virtual env if it doesn't exist
+          if [ ! -d "venv" ]; then
+            python3 -m venv venv
+          fi
           source venv/bin/activate
           pip install -r requirements.txt
-          
+          pip install gunicorn
+            
       - name: Run migrations
         run: |
-          cd ~/hydra-django-admin-preview
           source venv/bin/activate
           python manage.py migrate
-          python manage.py collectstatic --noinput
-          
+          python manage.py collectstatic --noinput --clear
+            
       - name: Restart server
         run: |
+          # Kill any existing gunicorn processes
           pkill gunicorn || true
-          cd ~/hydra-django-admin-preview
-          nohup ./run.sh > server.log 2>&1 &
+          
+          # Start gunicorn in the background
+          source venv/bin/activate
+          nohup gunicorn --bind 0.0.0.0:8000 twh_project.wsgi > server.log 2>&1 &
