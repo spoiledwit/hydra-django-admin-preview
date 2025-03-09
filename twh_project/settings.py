@@ -181,22 +181,12 @@ WSGI_APPLICATION = 'twh_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
+import dj_database_url
+
+DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://neondb_owner:npg_y7I6ksbmEATL@ep-empty-king-a8wh54nl-pooler.eastus2.azure.neon.tech/neondb?sslmode=require')
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT', '5432'),
-    }
+    'default': dj_database_url.parse(DATABASE_URL)
 }
 
 

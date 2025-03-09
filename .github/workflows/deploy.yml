@@ -1,0 +1,31 @@
+name: Deploy Django
+on:
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Pull latest code
+        run: |
+          cd ~/hydra-django-admin-preview
+          git pull
+          
+      - name: Install dependencies
+        run: |
+          cd ~/hydra-django-admin-preview
+          source venv/bin/activate
+          pip install -r requirements.txt
+          
+      - name: Run migrations
+        run: |
+          cd ~/hydra-django-admin-preview
+          source venv/bin/activate
+          python manage.py migrate
+          python manage.py collectstatic --noinput
+          
+      - name: Restart server
+        run: |
+          pkill gunicorn || true
+          cd ~/hydra-django-admin-preview
+          nohup ./run.sh > server.log 2>&1 &
