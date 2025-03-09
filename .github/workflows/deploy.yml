@@ -5,6 +5,12 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
+    env:
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
+      DEBUG: ${{ secrets.DEBUG }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+      STRIPE_PUBLISHABLE_KEY: ${{ secrets.STRIPE_PUBLISHABLE_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
