@@ -6,11 +6,11 @@ jobs:
   deploy:
     runs-on: self-hosted
     env:
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-      DEBUG: ${{ secrets.DEBUG }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-      STRIPE_PUBLISHABLE_KEY: ${{ secrets.STRIPE_PUBLISHABLE_KEY }}
+      SECRET_KEY: django-insecure-your-secret-key-here
+      DEBUG: True
+      DATABASE_URL: postgresql://neondb_owner:npg_y7I6ksbmEATL@ep-empty-king-a8wh54nl-pooler.eastus2.azure.neon.tech/neondb?sslmode=require
+      STRIPE_SECRET_KEY: your_stripe_secret_key
+      STRIPE_PUBLISHABLE_KEY: your_stripe_publishable_key
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
