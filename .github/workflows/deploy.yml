@@ -35,7 +35,6 @@ jobs:
         run: |
           # Kill any existing gunicorn processes
           pkill gunicorn || true
-          
           # Start gunicorn in the background
           source venv/bin/activate
           nohup gunicorn --bind 0.0.0.0:8000 twh_project.wsgi > server.log 2>&1 &
